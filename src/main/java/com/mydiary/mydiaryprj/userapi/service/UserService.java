@@ -7,9 +7,11 @@ import com.mydiary.mydiaryprj.userapi.entity.User;
 import com.mydiary.mydiaryprj.userapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
@@ -22,6 +24,9 @@ public class UserService {
         //닉네임 중복확인
         duplicationCheckNickname(request.getNickname());
 
+        //핸드폰 번호 중복확인
+        duplicationCheckPhoneNumber(request.getPhoneNumber());
+
         User user = User.builder()
                 .email(request.getEmail())
                 .password(request.getPassword())
@@ -30,6 +35,11 @@ public class UserService {
                 .build();
 
         userRepository.save(user);
+
+        //test
+//        if (true){
+//            throw new MyDiaryException(ExceptionStatus.DUPLICATION_EMAIL);
+//        }
     }
 
     public void duplicationCheckEmail(final String email) {
@@ -41,6 +51,12 @@ public class UserService {
     public void duplicationCheckNickname(final String nickname) {
         if (userRepository.findByNickname(nickname).isPresent()) {
             throw new MyDiaryException(ExceptionStatus.DUPLICATION_NICKNAME);
+        }
+    }
+
+    public void duplicationCheckPhoneNumber(final String phoneNumber){
+        if(userRepository.findByPhoneNumber(phoneNumber).isPresent()){
+            throw new MyDiaryException(ExceptionStatus.DUPLICATION_PHONENUMBER);
         }
     }
 }

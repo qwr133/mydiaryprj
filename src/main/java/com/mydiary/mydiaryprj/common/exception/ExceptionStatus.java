@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 public enum ExceptionStatus {
 
     DUPLICATION_EMAIL(400, "ABCDE", "중복되는 이메일입니다"),
-    DUPLICATION_NICKNAME(400, "NICKN", "존재하는 닉네임 입니다")
-
+    DUPLICATION_NICKNAME(400, "NICKN", "존재하는 닉네임 입니다"),
+    DUPLICATION_PHONENUMBER(400, "KSDFE", "이미 존재하는 핸드폰 번호입니다")
 
     ;
 
