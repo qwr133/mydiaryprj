@@ -14,13 +14,13 @@ import java.util.List;
 public class MyDiaryExceptionHandler {
 
     @ExceptionHandler(MyDiaryException.class)
-    public ResponseEntity myDiaryException(final MyDiaryException myDiaryException){
+    public ResponseEntity<Error> myDiaryException(final MyDiaryException myDiaryException){
         return response(HttpStatus.valueOf(myDiaryException.httpStatusCode()),myDiaryException.message(),myDiaryException.code());
     }
 
 
     @ExceptionHandler(BindException.class)
-    public ResponseEntity bindException(final BindException bindException) {
+    public ResponseEntity<Error> bindException(final BindException bindException) {
         List<String> errors = new ArrayList<>();
         bindException.getBindingResult().getFieldErrors().forEach(error -> {
             errors.add(error.getField() + "(" + error.getDefaultMessage() + ")");
@@ -32,7 +32,7 @@ public class MyDiaryExceptionHandler {
         return response(HttpStatus.BAD_REQUEST, errors.toString(), "ABCD");
     }
 
-    private ResponseEntity response(final HttpStatus httpStatus, final String message, final String code){
+    private ResponseEntity<Error> response(final HttpStatus httpStatus, final String message, final String code){
         Error.Value error = Error.Value.builder()
                 .code(code)
                 .message(message)

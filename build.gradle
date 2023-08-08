@@ -31,6 +31,14 @@ dependencies {
 
 	//validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	//jwt
+	implementation 'com.auth0:java-jwt:4.4.0'
+
+	//jbcrypt
+	implementation 'org.mindrot:jbcrypt:0.4'
+
+
 }
 
 tasks.named('test') {
