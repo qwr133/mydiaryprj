@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank;
 public class SignUpDTO {
 
     //    @Setter - 클라이언트 데이터는 수정을 하면 안되므로 setter 할 필요가 없음
+            //Q. 내 정보 변경 시 setter가 필요하지 않나?
     @Getter
     public static class Request {
 

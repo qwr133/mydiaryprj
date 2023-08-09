@@ -3,6 +3,7 @@ package com.mydiary.mydiaryprj.userapi.service;
 import com.mydiary.mydiaryprj.common.AES;
 import com.mydiary.mydiaryprj.common.JwtProvider;
 import com.mydiary.mydiaryprj.common.MyDiaryBcrypt;
+import com.mydiary.mydiaryprj.common.domain.LoginUser;
 import com.mydiary.mydiaryprj.common.exception.ExceptionStatus;
 import com.mydiary.mydiaryprj.common.exception.MyDiaryException;
 import com.mydiary.mydiaryprj.userapi.dto.MyInfoDTO;
@@ -11,6 +12,7 @@ import com.mydiary.mydiaryprj.userapi.dto.SignUpDTO;
 import com.mydiary.mydiaryprj.userapi.entity.User;
 import com.mydiary.mydiaryprj.userapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,8 @@ public class UserService {
 
 
     private final UserRepository userRepository;
+
+    private final ModelMapper modelMapper;
 
     public void signUp(final SignUpDTO.Request request) {
 
@@ -77,32 +81,29 @@ public class UserService {
 
     public SignInDTO.Response signIn(final SignInDTO.Request request) {
 
-        User user=  userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new MyDiaryException(ExceptionStatus.CHECK_EMAIL_PASSWORD));
 
         //비밀번호 확인(사용자 비번 / db 비번)
         validPassword(request.getPassword(), user.getPassword());
 
-        String jwt = JwtProvider.make(JwtProvider.Recipe.builder().id(user.getId()).build(), jwtSecret);
+        String jwt = JwtProvider.make(JwtProvider.Recipe.builder().userId(user.getId()).build(), jwtSecret);
 
-        return  SignInDTO.Response.builder().jwt(jwt).build();
+        return SignInDTO.Response.builder().jwt(jwt).build();
     }
 
-    private void validPassword(final String password, final String hashedPassword){
-        if (!MyDiaryBcrypt.checkpw(password, hashedPassword)){
+    private void validPassword(final String password, final String hashedPassword) {
+        if (!MyDiaryBcrypt.checkpw(password, hashedPassword)) {
             throw new MyDiaryException(ExceptionStatus.CHECK_EMAIL_PASSWORD);
         }
     }
 
-    public MyInfoDTO.Response getMyInfo(final HttpServletRequest hsr) {
-        String authorization = hsr.getHeader("Authorization");
+    public MyInfoDTO.Response getMyInfo(final LoginUser loginUser) {
+        User user = userRepository.findById(loginUser.getId())
+                .orElseThrow(() -> new MyDiaryException(ExceptionStatus.NOT_EXIST_USER));
 
-        String BEARER = "Bearer ";
+        MyInfoDTO.Response response = modelMapper.map(user, MyInfoDTO.Response.class);
 
-        String jwt =  authorization.substring(BEARER.length());
-
-
-
-
+        return response;
     }
 }

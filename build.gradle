@@ -38,6 +38,12 @@ dependencies {
 	//jbcrypt
 	implementation 'org.mindrot:jbcrypt:0.4'
 
+	//modelmapper
+	implementation 'org.modelmapper:modelmapper:3.1.1'
+
+	//swagger
+	// swagger api 문서화
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
 
 }
 

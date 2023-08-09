@@ -11,7 +11,11 @@ public enum ExceptionStatus {
 
     CHECK_EMAIL_PASSWORD(401, "DSFWE", "이메일 또는 비밀번호를 다시 확인해주세요"),
     NON_SIGN_IN(401, "VSVDS", "비로그인"),
-    INVALID_TOKEN(401, "WEGWQ", "유효하지 않은 토큰")
+
+    INVALID_TOKEN(401, "WEGWQ", "유효하지 않은 토큰"),
+
+    EXPIRED_TOKEN(401, "TRJWK", "만료된 토큰"),
+    NOT_EXIST_USER(404, "FWEKN", "유저를 찾을 수 없음")
 
     ;
 
